@@ -12,10 +12,6 @@ type Author struct {
 	Books []Book `json:"Books,omitempty" gorm:"foreignKey:AuthorID;references:id"`
 }
 
-// func (Author) TableName() string {
-// 	return "Author"
-// }
-
 func (a *Author) toString() string {
 	return fmt.Sprintf("ID : %d, Name : %s, CreatedAt : %s",
 		a.ID, a.Name, a.CreatedAt.Format("2006-01-02 15:04:05"))

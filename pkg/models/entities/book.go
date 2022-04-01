@@ -8,30 +8,27 @@ import (
 
 type Book struct {
 	gorm.Model
-	Title     string `json:"title"`
-	Page      int    `json:"page"`
-	Stock     int    `json:"stock"`
-	Price     string `json:"price"`
-	StockCode string `json:"stockCode"`
-	ISBN      string `json:"ISBN"`
-	AuthorID  uint   `json:"AuthorID"`
+	Title     string `json:"title,omitempty"`
+	Page      int    `json:"page,omitempty"`
+	Stock     int    `json:"stock,omitempty"`
+	Price     string `json:"price,omitempty"`
+	StockCode string `json:"stockCode,omitempty"`
+	ISBN      string `json:"ISBN,omitempty"`
+	AuthorID  uint   `json:"AuthorID,omitempty"`
 	// Authors	Author	`json:"Authors,omitempty" gorm:"foreignkey:id;references:AuthorID"`
 }
 
 type Books struct {
 	gorm.Model
-	Title     string `json:"title"`
-	Page      int    `json:"page"`
-	Stock     int    `json:"stock"`
-	Price     string `json:"price"`
-	StockCode string `json:"stockCode"`
-	ISBN      string `json:"ISBN"`
-	AuthorID  uint   `json:"AuthorID"`
+	Title     string `json:"title,omitempty"`
+	Page      int    `json:"page,omitempty"`
+	Stock     int    `json:"stock,omitempty"`
+	Price     string `json:"price,omitempty"`
+	StockCode string `json:"stockCode,omitempty"`
+	ISBN      string `json:"ISBN,omitempty"`
+	AuthorID  uint   `json:"AuthorID,omitempty"`
 	Authors	Author	`json:"Authors,omitempty" gorm:"foreignkey:id;references:AuthorID"`
 }
-// func (Book) TableName() string {
-// 	return "Book"
-// }
 
 func (b *Book) toString() string {
 	return fmt.Sprintf("ID : %d, Title : %s, Page : %d, Stock : %d, Price : %s, StockCode : %s, ISBN : %s, AuthorID : %d, CreatedAt : %s",

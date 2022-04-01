@@ -27,6 +27,7 @@ func (a *AuthorRepository) Migration() {
 	a.db.AutoMigrate(&models.Author{})
 }
 
+// InsertSampleData inserts sample data to database
 func (a *AuthorRepository) InsertSampleData() {
 	jsonFile, err := os.Open("./pkg/mocks/authors.json")
 	if err != nil {
@@ -42,6 +43,7 @@ func (a *AuthorRepository) InsertSampleData() {
 	}
 }
 
+// GetAllAuthors lists all available authors
 func (a *AuthorRepository) GetAllAuthors(w http.ResponseWriter, r *http.Request) {
 	var author []models.Author
 
@@ -56,6 +58,7 @@ func (a *AuthorRepository) GetAllAuthors(w http.ResponseWriter, r *http.Request)
 	json.NewEncoder(w).Encode(author)
 }
 
+// GetAllAuGetAuthorByID returns author information according to given id
 func (a *AuthorRepository) GetAuthorByID(w http.ResponseWriter, r *http.Request) {
 	// Read dynamic id parameter
 	vars := mux.Vars(r)
@@ -74,6 +77,7 @@ func (a *AuthorRepository) GetAuthorByID(w http.ResponseWriter, r *http.Request)
 	json.NewEncoder(w).Encode(author)
 }
 
+// AddAuthor creates a new author
 func (a *AuthorRepository) AddAuthor(w http.ResponseWriter, r *http.Request) {
 	// Read to request body
 	body, err := ioutil.ReadAll(r.Body)
@@ -101,6 +105,7 @@ func (a *AuthorRepository) AddAuthor(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(author)
 }
 
+// UpdateAuthor updates the given author
 func (a *AuthorRepository) UpdateAuthor(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, _ := strconv.Atoi(vars["id"])
@@ -134,24 +139,7 @@ func (a *AuthorRepository) UpdateAuthor(w http.ResponseWriter, r *http.Request) 
 	json.NewEncoder(w).Encode(updatedAuthor)
 }
 
-func (a *AuthorRepository) FindAuthorByName(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-
-	var author []models.Author
-
-	if result := a.db.Where("name ILIKE ? ", "%"+vars["name"]+"%").Find(&author); result.Error != nil {
-		json.NewEncoder(w).Encode(http_errors.ParseErrors(result.Error))
-		return
-	}
-
-	fmt.Println(vars["name"])
-
-	w.Header().Add("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-
-	json.NewEncoder(w).Encode(author)
-}
-
+// DeleteAuthor deletes given author according to given id
 func (a *AuthorRepository) DeleteAuthor(w http.ResponseWriter, r *http.Request) {
 	// Read dynamic parameter
 	vars := mux.Vars(r)
@@ -172,6 +160,26 @@ func (a *AuthorRepository) DeleteAuthor(w http.ResponseWriter, r *http.Request) 
 	json.NewEncoder(w).Encode("Deleted")
 }
 
+// FindAuthorByName returns authors found according to given search query
+func (a *AuthorRepository) FindAuthorByName(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+
+	var author []models.Author
+
+	if result := a.db.Where("name ILIKE ? ", "%"+vars["name"]+"%").Find(&author); result.Error != nil {
+		json.NewEncoder(w).Encode(http_errors.ParseErrors(result.Error))
+		return
+	}
+
+	fmt.Println(vars["name"])
+
+	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+
+	json.NewEncoder(w).Encode(author)
+}
+
+// GetAuthorsCount returns number of authors
 func (a *AuthorRepository) GetAuthorsCount(w http.ResponseWriter, r *http.Request) {
 	var count int
 
@@ -182,6 +190,7 @@ func (a *AuthorRepository) GetAuthorsCount(w http.ResponseWriter, r *http.Reques
 	json.NewEncoder(w).Encode(count)
 }
 
+// GetAuthorWithBooksById returns author with its book information
 func (a *AuthorRepository) GetAuthorWithBooksById(w http.ResponseWriter, r *http.Request) {
 	// Read dynamic parameter
 	vars := mux.Vars(r)
@@ -201,6 +210,7 @@ func (a *AuthorRepository) GetAuthorWithBooksById(w http.ResponseWriter, r *http
 	json.NewEncoder(w).Encode(Author)
 }
 
+// GetAllAuthorsWithBooksById returns all authors with their book information
 func (a *AuthorRepository) GetAllAuthorsWithBooksById(w http.ResponseWriter, r *http.Request) {
 	var Authors []models.Author
 

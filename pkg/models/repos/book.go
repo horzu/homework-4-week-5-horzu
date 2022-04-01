@@ -27,6 +27,7 @@ func (b *BookRepository) Migration() {
 	b.db.AutoMigrate(&models.Book{})
 }
 
+// InsertSampleData inserts sample data to database
 func (b *BookRepository) InsertSampleData() {
 	jsonFile, err := os.Open("./pkg/mocks/books.json")
 	if err != nil {
@@ -42,6 +43,7 @@ func (b *BookRepository) InsertSampleData() {
 	}
 }
 
+// GetAllBooks lists all available books
 func (b *BookRepository) GetAllBooks(w http.ResponseWriter, r *http.Request) {
 	var books []models.Book
 
@@ -57,6 +59,7 @@ func (b *BookRepository) GetAllBooks(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(books)
 }
 
+// GetBookByID returns book information according to given id
 func (b *BookRepository) GetBookByID(w http.ResponseWriter, r *http.Request) {
 	// Read dynamic id parameter
 	vars := mux.Vars(r)
@@ -83,6 +86,7 @@ func (b *BookRepository) GetBookByID(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// AddBook creates a new book
 func (b *BookRepository) AddBook(w http.ResponseWriter, r *http.Request) {
 	// Read to request body
 	body, err := ioutil.ReadAll(r.Body)
@@ -109,6 +113,7 @@ func (b *BookRepository) AddBook(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(book)
 }
 
+// UpdateBook updates the given book
 func (b *BookRepository) UpdateBook(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
@@ -149,6 +154,7 @@ func (b *BookRepository) UpdateBook(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(updatedBook)
 }
 
+// DeleteBook deletes given book according to given id
 func (b *BookRepository) DeleteBook(w http.ResponseWriter, r *http.Request) {
 	// Read dynamic parameter
 	vars := mux.Vars(r)
@@ -176,6 +182,7 @@ func (b *BookRepository) DeleteBook(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode("Deleted")
 }
 
+// FindBookByName returns books found according to given search query
 func (b *BookRepository) FindBookByName(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 
@@ -195,6 +202,7 @@ func (b *BookRepository) FindBookByName(w http.ResponseWriter, r *http.Request) 
 	json.NewEncoder(w).Encode(books)
 }
 
+// BuyBookByID buys book and returns the new state of the given book
 func (b *BookRepository) BuyBookByID(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
@@ -228,6 +236,7 @@ func (b *BookRepository) BuyBookByID(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(book)
 }
 
+// GetBooksCount returns number of books
 func (b *BookRepository) GetBooksCount(w http.ResponseWriter, r *http.Request) {
 	var count int
 
@@ -238,6 +247,7 @@ func (b *BookRepository) GetBooksCount(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(count)
 }
 
+// GetBooksWithAuthorById returns book with its author information
 func (b *BookRepository) GetBooksWithAuthorById(w http.ResponseWriter, r *http.Request) {
 	// Read dynamic parameter
 	vars := mux.Vars(r)
@@ -263,6 +273,7 @@ func (b *BookRepository) GetBooksWithAuthorById(w http.ResponseWriter, r *http.R
 	json.NewEncoder(w).Encode(Book)
 }
 
+// GetAllBooksWithAuthorById returns all books with their author information
 func (b *BookRepository) GetAllBooksWithAuthorById(w http.ResponseWriter, r *http.Request) {
 	var Books []models.Books
 
@@ -278,6 +289,7 @@ func (b *BookRepository) GetAllBooksWithAuthorById(w http.ResponseWriter, r *htt
 	json.NewEncoder(w).Encode(Books)
 }
 
+// GetBooksByPagesLessThenWithAuthorInformation returns all books which have less pages then given page number
 func (b *BookRepository) GetBooksByPagesLessThenWithAuthorInformation(w http.ResponseWriter, r *http.Request) {
 	// Read dynamic parameter
 	vars := mux.Vars(r)

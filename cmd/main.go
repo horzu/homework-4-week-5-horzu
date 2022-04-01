@@ -11,6 +11,7 @@ import (
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
+	_ "github.com/horzu/golang/picus-security-bootcamp/homework-4-week-5-horzu/docs" // This line is necessary for go-swagger to find your docs!
 	postgres "github.com/horzu/golang/picus-security-bootcamp/homework-4-week-5-horzu/pkg/db"
 	"github.com/horzu/golang/picus-security-bootcamp/homework-4-week-5-horzu/pkg/models/repos"
 	"github.com/joho/godotenv"
@@ -80,6 +81,7 @@ func main() {
 		Handler:      r,
 	}
 
+	// start server
 	go func() {
 		log.Println("API is running!")
 
