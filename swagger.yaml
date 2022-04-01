@@ -1,0 +1,149 @@
+basePath: /
+consumes:
+- application/json
+definitions:
+  BookRequest:
+    properties:
+      AuthorID:
+        format: uint64
+        type: integer
+      ISBN:
+        type: string
+      id:
+        format: int64
+        type: integer
+        x-go-name: ID
+      page:
+        format: int64
+        type: integer
+        x-go-name: Page
+      price:
+        type: string
+        x-go-name: Price
+      stock:
+        format: int64
+        type: integer
+        x-go-name: Stock
+      stockCode:
+        type: string
+        x-go-name: StockCode
+      title:
+        type: string
+        x-go-name: Title
+    title: Books request model.
+    type: object
+    x-go-package: github.com/horzu/golang/picus-security-bootcamp/homework-4-week-5-horzu/pkg/models/entities
+  BookResponse:
+    properties:
+      AuthorID:
+        format: uint64
+        type: integer
+      ISBN:
+        type: string
+      id:
+        format: int64
+        type: integer
+        x-go-name: ID
+      page:
+        format: int64
+        type: integer
+        x-go-name: Page
+      price:
+        type: string
+        x-go-name: Price
+      stock:
+        format: int64
+        type: integer
+        x-go-name: Stock
+      stockCode:
+        type: string
+        x-go-name: StockCode
+      title:
+        type: string
+        x-go-name: Title
+    title: Books response model.
+    type: object
+    x-go-package: github.com/horzu/golang/picus-security-bootcamp/homework-4-week-5-horzu/pkg/models/entities
+host: localhost
+info:
+  description: Documentation of our LibraryAPI. With this RestAPI you can make CRUD
+    operations on Books and Authors.
+  license:
+    name: MIT
+    url: http://opensource.org/licenses/MIT
+  termsOfService: there are no TOS at this moment, use at your own risk we take no
+    responsibility
+  title: LibraryAPI.
+  version: 1.0.0
+paths:
+  /books:
+    get:
+      description: Returns a list of books
+      operationId: GetAllBooks
+      responses:
+        "200":
+          $ref: '#/responses/booksResponseSlice'
+      tags:
+      - books
+  /books/:
+    post:
+      description: Creates the book of given body
+      operationId: AddBook
+      responses:
+        "201":
+          $ref: '#/responses/bookResponse'
+      tags:
+      - books
+  /books/{id}:
+    delete:
+      description: Deletes and returns the book of given id
+      operationId: DeleteBook
+      parameters:
+      - description: The id of the Book to perform operations on the database
+        format: int64
+        in: path
+        name: id
+        required: true
+        type: integer
+        x-go-name: ID
+      responses:
+        "201":
+          $ref: '#/responses/bookResponse'
+      tags:
+      - books
+    get:
+      description: Returns the book of given id
+      operationId: GetBookByID
+      parameters:
+      - description: The id of the Book to perform operations on the database
+        format: int64
+        in: path
+        name: id
+        required: true
+        type: integer
+        x-go-name: ID
+      responses:
+        "200":
+          $ref: '#/responses/bookResponse'
+      tags:
+      - books
+produces:
+- application/json
+responses:
+  bookResponse:
+    description: book as api response
+    schema:
+      $ref: '#/definitions/BookResponse'
+  booksResponseSlice:
+    description: a list of books as api response
+    schema:
+      items:
+        $ref: '#/definitions/BookResponse'
+      type: array
+schemes:
+- http
+- https
+securityDefinitions:
+  basic:
+    type: basic
+swagger: "2.0"
