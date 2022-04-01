@@ -6,6 +6,7 @@ import (
 	"gorm.io/gorm"
 )
 
+// Author represents body of author requests.
 type Author struct {
 	gorm.Model
 	Name  string `json:"Name"`

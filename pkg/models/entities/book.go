@@ -6,6 +6,7 @@ import (
 	"gorm.io/gorm"
 )
 
+// Books represents body of book requests.
 type Book struct {
 	gorm.Model
 	Title     string `json:"title,omitempty"`
@@ -15,9 +16,9 @@ type Book struct {
 	StockCode string `json:"stockCode,omitempty"`
 	ISBN      string `json:"ISBN,omitempty"`
 	AuthorID  uint   `json:"AuthorID,omitempty"`
-	// Authors	Author	`json:"Authors,omitempty" gorm:"foreignkey:id;references:AuthorID"`
 }
 
+// Books represents body of book requests with author information.
 type Books struct {
 	gorm.Model
 	Title     string `json:"title,omitempty"`
