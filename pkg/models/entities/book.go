@@ -6,12 +6,61 @@ import (
 	"gorm.io/gorm"
 )
 
-// Books represents body of book requests.
+// a list of books as api response
+// swagger:response booksResponseSlice
+type booksResponseSlice struct{
+	// All books in the system
+	// in: body
+	Body []BookResponse
+}
+
+// book as api response
+// swagger:response bookResponse
+type bookResponse struct{
+	// All books in the system
+	// in: body
+	Body BookResponse
+}
+
+// swagger:parameters GetBookByID DeleteBook
+type bookIdParameter struct{
+	// The id of the Book to perform operations on the database
+	// in: path
+	// required: yes
+	ID int `json:"id"`
+}
+
+// Books request model.
+// swagger:model
+type BookRequest struct {
+	ID	int64	`json:"id"`
+	Title     string `json:"title,omitempty"`
+	Page      int    `json:"page,omitempty"`
+	Stock     int    `json:"stock,omitempty"`  
+	Price     string `json:"price,omitempty"`
+	StockCode string `json:"stockCode,omitempty"`
+	ISBN      string `json:"ISBN,omitempty"`
+	AuthorID  uint   `json:"AuthorID,omitempty"`
+}
+
+// Books response model.
+// swagger:model
+type BookResponse struct {
+	ID	int64	`json:"id"`
+	Title     string `json:"title,omitempty"`
+	Page      int    `json:"page,omitempty"`
+	Stock     int    `json:"stock,omitempty"`  
+	Price     string `json:"price,omitempty"`
+	StockCode string `json:"stockCode,omitempty"`
+	ISBN      string `json:"ISBN,omitempty"`
+	AuthorID  uint   `json:"AuthorID,omitempty"`
+}
+
 type Book struct {
 	gorm.Model
 	Title     string `json:"title,omitempty"`
 	Page      int    `json:"page,omitempty"`
-	Stock     int    `json:"stock,omitempty"`
+	Stock     int    `json:"stock,omitempty"`  
 	Price     string `json:"price,omitempty"`
 	StockCode string `json:"stockCode,omitempty"`
 	ISBN      string `json:"ISBN,omitempty"`
@@ -28,6 +77,8 @@ type Books struct {
 	StockCode string `json:"stockCode,omitempty"`
 	ISBN      string `json:"ISBN,omitempty"`
 	AuthorID  uint   `json:"AuthorID,omitempty"`
+
+	// the author information for this book
 	Authors	Author	`json:"Authors,omitempty" gorm:"foreignkey:id;references:AuthorID"`
 }
 

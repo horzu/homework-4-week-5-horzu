@@ -27,6 +27,7 @@ func (b *BookRepository) Migration() {
 	b.db.AutoMigrate(&models.Book{})
 }
 
+
 // InsertSampleData inserts sample data to database
 func (b *BookRepository) InsertSampleData() {
 	jsonFile, err := os.Open("./pkg/mocks/books.json")
@@ -43,6 +44,11 @@ func (b *BookRepository) InsertSampleData() {
 	}
 }
 
+// swagger:route GET /books books GetAllBooks
+// Returns a list of books
+// responses:
+//  200: booksResponseSlice
+
 // GetAllBooks lists all available books
 func (b *BookRepository) GetAllBooks(w http.ResponseWriter, r *http.Request) {
 	var books []models.Book
@@ -58,6 +64,11 @@ func (b *BookRepository) GetAllBooks(w http.ResponseWriter, r *http.Request) {
 
 	json.NewEncoder(w).Encode(books)
 }
+
+// swagger:route GET /books/{id} books GetBookByID
+// Returns the book of given id
+// responses:
+//  200: bookResponse
 
 // GetBookByID returns book information according to given id
 func (b *BookRepository) GetBookByID(w http.ResponseWriter, r *http.Request) {
@@ -85,6 +96,11 @@ func (b *BookRepository) GetBookByID(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(book)
 	}
 }
+
+// swagger:route POST /books/ books AddBook
+// Creates the book of given body
+// responses:
+//  201: bookResponse
 
 // AddBook creates a new book
 func (b *BookRepository) AddBook(w http.ResponseWriter, r *http.Request) {
@@ -154,6 +170,11 @@ func (b *BookRepository) UpdateBook(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(updatedBook)
 }
 
+// swagger:route DELETE /books/{id} books DeleteBook
+// Deletes and returns the book of given id
+// responses:
+//  201: bookResponse
+
 // DeleteBook deletes given book according to given id
 func (b *BookRepository) DeleteBook(w http.ResponseWriter, r *http.Request) {
 	// Read dynamic parameter
@@ -178,7 +199,7 @@ func (b *BookRepository) DeleteBook(w http.ResponseWriter, r *http.Request) {
 	b.db.Delete(&book)
 
 	w.Header().Add("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
+	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode("Deleted")
 }
 
