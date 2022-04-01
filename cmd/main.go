@@ -1,8 +1,12 @@
 package main
 
 import (
+	"context"
 	"log"
 	"net/http"
+	"os"
+	"os/signal"
+	"time"
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
@@ -69,37 +73,43 @@ func main() {
 	a.HandleFunc("/{id}", authorRepo.DeleteAuthor).Methods(http.MethodDelete)
     r.HandleFunc("/authorcount", authorRepo.GetAuthorsCount).Methods(http.MethodGet)
 
-    log.Println("API is running!")
-	http.ListenAndServe(":4000", r)
+	srv := &http.Server{
+		Addr:         "127.0.0.1:4000",
+		WriteTimeout: time.Second * 15,
+		ReadTimeout:  time.Second * 15,
+		IdleTimeout:  time.Second * 60,
+		Handler:      r,
+	}
 
+	go func() {
+		log.Println("API is running!")
 
-	// Initialize methods
-	// fmt.Println(authorRepo.GetAuthorByID(1))
-	// fmt.Println(authorRepo.FindAuthorByName("es"))
-	// fmt.Println(authorRepo.GetAuthorsWithBookInformation())
-	// fmt.Println(authorRepo.GetDeletedAuthorsWithBookInformation())
-	// fmt.Println(authorRepo.GetAuthorWithBookInformationByID(3))
-	// authorRepo.DeleteById(2)
-	// authorRepo.GetAuthorByID(1)
-	// fmt.Println(authorRepo.GetAllBooks())
-	// fmt.Println(authorRepo.GetAuthorsCount())
+		if err := srv.ListenAndServe(); err != nil {
+			log.Println(err)
+		}
+	}()
 
-	// bookRepo.InsertSampleData()
-	// fmt.Println(bookRepo.GetBookByID(1))
-	// fmt.Println(bookRepo.FindBookByName("decoder"))
-	// result, _ := bookRepo.GetAllBooksWithAuthorInformation()
-	// for _, v := range result {
-	// 	fmt.Printf("Book: %s, Author: %s\n",v.Title, v.Authors[0].Name)
-	// }
-	// bookRepo.DeleteById(2)
-	// bookRepo.GetBookByID(1)
-	// fmt.Println(bookRepo.GetAllBooks())
-	// fmt.Println(bookRepo.GetBooksCount())
-	// fmt.Println(bookRepo.GetBooksWithAuthorInformation())
-	// fmt.Println(bookRepo.GetDeletedBooksWithAuthorInformation())
-	// fmt.Println(bookRepo.GetBookWithAuthorInformationByID(3))
-	// fmt.Println(bookRepo.GetBooksByPagesLessThenWithAuthorInformation(500))
-	// bookRepo.GetStockCodeByTitle("the")
-	// fmt.Println(bookRepo.BuyBookByID(3,50))
+	ShutdownServer(srv, time.Second*10)
+}
 
+func ShutdownServer(srv *http.Server, timeout time.Duration) {
+	c := make(chan os.Signal, 1)
+	// We'll accept graceful shutdowns when quit via SIGINT (Ctrl+C)
+	// SIGKILL, SIGQUIT or SIGTERM (Ctrl+/) will not be caught.
+	signal.Notify(c, os.Interrupt)
+
+	// Block until we receive our signal.
+	<-c
+
+	// Create a deadline to wait for.
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+	// Doesn't block if no connections, but will otherwise wait
+	// until the timeout deadline.
+	srv.Shutdown(ctx)
+	// Optionally, you could run srv.Shutdown in a goroutine and block on
+	// <-ctx.Done() if your application should wait for other services
+	// to finalize based on context cancellation.
+	log.Println("shutting down")
+	os.Exit(0)
 }
