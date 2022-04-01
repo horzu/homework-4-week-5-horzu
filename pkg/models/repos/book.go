@@ -11,6 +11,7 @@ import (
 
 	"github.com/gorilla/mux"
 	models "github.com/horzu/golang/picus-security-bootcamp/homework-4-week-5-horzu/pkg/models/entities"
+	http_errors "github.com/horzu/golang/picus-security-bootcamp/homework-4-week-5-horzu/pkg/models/errors"
 	"gorm.io/gorm"
 )
 
@@ -46,6 +47,8 @@ func (b *BookRepository) GetAllBooks(w http.ResponseWriter, r *http.Request) {
 
 	if result := b.db.Find(&books); result.Error != nil {
 		fmt.Println(result.Error)
+		json.NewEncoder(w).Encode(http_errors.ParseErrors(result.Error))
+		return
 	}
 
 	w.Header().Add("Content-Type", "application/json")
@@ -57,13 +60,21 @@ func (b *BookRepository) GetAllBooks(w http.ResponseWriter, r *http.Request) {
 func (b *BookRepository) GetBookByID(w http.ResponseWriter, r *http.Request) {
 	// Read dynamic id parameter
 	vars := mux.Vars(r)
-	id, _ := strconv.Atoi(vars["id"])
+	id, err := strconv.Atoi(vars["id"])
+
+	if err!=nil{
+		fmt.Println(err)
+		json.NewEncoder(w).Encode(http_errors.ParseErrors(err))
+		return
+	}
 
 	// Iterate over all the books
 	var book models.Book
 
 	if result := b.db.First(&book, id); result.Error != nil {
 		fmt.Println(result.Error)
+		json.NewEncoder(w).Encode(http_errors.ParseErrors(result.Error))
+		return
 	} else {
 		w.Header().Add("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
@@ -79,15 +90,18 @@ func (b *BookRepository) AddBook(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		log.Fatalln(err)
+		json.NewEncoder(w).Encode(http_errors.ParseErrors(err))
+		return
 	}
 
 	var book models.Book
 	json.Unmarshal(body, &book)
 
 	// Append to the Book
-	result := b.db.Create(&book)
-	if result.Error != nil {
+	if result := b.db.Create(&book); result.Error != nil {
 		fmt.Println(result.Error)
+		json.NewEncoder(w).Encode(http_errors.ParseErrors(result.Error))
+		return
 	}
 	// Send a 201 created response
 	w.WriteHeader(http.StatusCreated)
@@ -97,13 +111,21 @@ func (b *BookRepository) AddBook(w http.ResponseWriter, r *http.Request) {
 
 func (b *BookRepository) UpdateBook(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	id, _ := strconv.Atoi(vars["id"])
+	id, err := strconv.Atoi(vars["id"])
+
+	if err != nil {
+		log.Fatalln(err)
+		json.NewEncoder(w).Encode(http_errors.ParseErrors(err))
+		return
+	}
 	// Read to request body
 	body, err := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
 
 	if err != nil {
 		log.Fatalln(err)
+		json.NewEncoder(w).Encode(http_errors.ParseErrors(err))
+		return
 	}
 
 	var updatedBook models.Book
@@ -116,6 +138,8 @@ func (b *BookRepository) UpdateBook(w http.ResponseWriter, r *http.Request) {
 	// Append to the Book
 	if result := b.db.First(&book, id); result.Error != nil {
 		fmt.Println(result.Error)
+		json.NewEncoder(w).Encode(http_errors.ParseErrors(result.Error))
+		return
 	}
 
 	b.db.Save(&updatedBook)
@@ -125,21 +149,29 @@ func (b *BookRepository) UpdateBook(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(updatedBook)
 }
 
-func (b *BookRepository) DeleteBook(w http.ResponseWriter, r *http.Request){
+func (b *BookRepository) DeleteBook(w http.ResponseWriter, r *http.Request) {
 	// Read dynamic parameter
 	vars := mux.Vars(r)
-	id, _ := strconv.Atoi(vars["id"])
-	
+	id, err := strconv.Atoi(vars["id"])
+
+	if err != nil {
+		log.Fatalln(err)
+		json.NewEncoder(w).Encode(http_errors.ParseErrors(err))
+		return
+	}
+
 	// Find the book by id
 	var book models.Book
 
-	if result := b.db.First(&book, id); result.Error != nil{
+	if result := b.db.First(&book, id); result.Error != nil {
 		fmt.Println(result.Error)
+		json.NewEncoder(w).Encode(http_errors.ParseErrors(result.Error))
+		return
 	}
 	// Delete that book
 	b.db.Delete(&book)
 
-	w.Header().Add("Content-Type","application/json")
+	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode("Deleted")
 }
@@ -149,8 +181,10 @@ func (b *BookRepository) FindBookByName(w http.ResponseWriter, r *http.Request) 
 
 	var books []models.Book
 
-	if result := b.db.Where("title ILIKE ? ", "%" + vars["name"] + "%").Find(&books); result.Error != nil {
+	if result := b.db.Where("title ILIKE ? ", "%"+vars["name"]+"%").Find(&books); result.Error != nil {
 		fmt.Println(result.Error)
+		json.NewEncoder(w).Encode(http_errors.ParseErrors(result.Error))
+		return
 	}
 
 	fmt.Println(vars["name"])
@@ -163,15 +197,27 @@ func (b *BookRepository) FindBookByName(w http.ResponseWriter, r *http.Request) 
 
 func (b *BookRepository) BuyBookByID(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	id, _ := strconv.Atoi(vars["id"])
-	quantity, _ := strconv.Atoi(vars["quantity"])
+	id, err := strconv.Atoi(vars["id"])
+	if err != nil {
+		log.Fatalln(err)
+		json.NewEncoder(w).Encode(http_errors.ParseErrors(err))
+		return
+	}
+	quantity, err := strconv.Atoi(vars["quantity"])
+	if err != nil {
+		log.Fatalln(err)
+		json.NewEncoder(w).Encode(http_errors.ParseErrors(err))
+		return
+	}
 	// Find the book by id
 	var book models.Book
 
-	if result := b.db.First(&book, id); result.Error != nil{
+	if result := b.db.First(&book, id); result.Error != nil {
 		fmt.Println(result.Error)
+		json.NewEncoder(w).Encode(http_errors.ParseErrors(result.Error))
+		return
 	}
-	
+
 	// Update that book
 	book.Stock -= quantity
 	b.db.Save(&book)
@@ -195,12 +241,20 @@ func (b *BookRepository) GetBooksCount(w http.ResponseWriter, r *http.Request) {
 func (b *BookRepository) GetBooksWithAuthorById(w http.ResponseWriter, r *http.Request) {
 	// Read dynamic parameter
 	vars := mux.Vars(r)
-	id, _ := strconv.Atoi(vars["id"])
+	id, err := strconv.Atoi(vars["id"])
+
+	if err != nil {
+		log.Fatalln(err)
+		json.NewEncoder(w).Encode(http_errors.ParseErrors(err))
+		return
+	}
 
 	var Book models.Books
 
 	if result := b.db.Preload("Authors").First(&Book, id); result.Error != nil {
 		fmt.Println(result.Error)
+		json.NewEncoder(w).Encode(http_errors.ParseErrors(result.Error))
+		return
 	}
 
 	w.Header().Add("Content-Type", "application/json")
@@ -214,6 +268,8 @@ func (b *BookRepository) GetAllBooksWithAuthorById(w http.ResponseWriter, r *htt
 
 	if result := b.db.Preload("Authors").Find(&Books); result.Error != nil {
 		fmt.Println(result.Error)
+		json.NewEncoder(w).Encode(http_errors.ParseErrors(result.Error))
+		return
 	}
 
 	w.Header().Add("Content-Type", "application/json")
@@ -225,17 +281,25 @@ func (b *BookRepository) GetAllBooksWithAuthorById(w http.ResponseWriter, r *htt
 func (b *BookRepository) GetBooksByPagesLessThenWithAuthorInformation(w http.ResponseWriter, r *http.Request) {
 	// Read dynamic parameter
 	vars := mux.Vars(r)
-	pages, _ := strconv.Atoi(vars["pages"])
+	pages, err := strconv.Atoi(vars["pages"])
+
+	if err != nil {
+		log.Fatalln(err)
+		json.NewEncoder(w).Encode(http_errors.ParseErrors(err))
+		return
+	}
 
 	var Books []models.Books
-	
+
 	if result := b.db.
-			Table("books").
-			Select("*").
-			Where("books.page < ? ", pages).
-			Joins("left join authors on authors.id = books.author_id").
-			Scan(&Books); result.Error != nil {
+		Table("books").
+		Select("*").
+		Where("books.page < ? ", pages).
+		Joins("left join authors on authors.id = books.author_id").
+		Scan(&Books); result.Error != nil {
 		fmt.Println(result.Error)
+		json.NewEncoder(w).Encode(http_errors.ParseErrors(result.Error))
+		return
 	}
 
 	w.Header().Add("Content-Type", "application/json")
@@ -243,4 +307,3 @@ func (b *BookRepository) GetBooksByPagesLessThenWithAuthorInformation(w http.Res
 
 	json.NewEncoder(w).Encode(Books)
 }
-

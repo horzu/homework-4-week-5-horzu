@@ -11,6 +11,7 @@ import (
 
 	"github.com/gorilla/mux"
 	models "github.com/horzu/golang/picus-security-bootcamp/homework-4-week-5-horzu/pkg/models/entities"
+	http_errors "github.com/horzu/golang/picus-security-bootcamp/homework-4-week-5-horzu/pkg/models/errors"
 	"gorm.io/gorm"
 )
 
@@ -45,7 +46,8 @@ func (a *AuthorRepository) GetAllAuthors(w http.ResponseWriter, r *http.Request)
 	var author []models.Author
 
 	if result := a.db.Find(&author); result.Error != nil {
-		fmt.Println(result.Error)
+		json.NewEncoder(w).Encode(http_errors.ParseErrors(result.Error))
+		return
 	}
 
 	w.Header().Add("Content-Type", "application/json")
@@ -63,13 +65,13 @@ func (a *AuthorRepository) GetAuthorByID(w http.ResponseWriter, r *http.Request)
 	var author models.Author
 
 	if result := a.db.First(&author, id); result.Error != nil {
-		fmt.Println(result.Error)
-	} else {
-		w.Header().Add("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-
-		json.NewEncoder(w).Encode(author)
+		json.NewEncoder(w).Encode(http_errors.ParseErrors(result.Error))
+		return
 	}
+	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+
+	json.NewEncoder(w).Encode(author)
 }
 
 func (a *AuthorRepository) AddAuthor(w http.ResponseWriter, r *http.Request) {
@@ -79,6 +81,8 @@ func (a *AuthorRepository) AddAuthor(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		log.Fatalln(err)
+		json.NewEncoder(w).Encode(http_errors.ParseErrors(err))
+		return
 	}
 
 	var author models.Author
@@ -88,6 +92,8 @@ func (a *AuthorRepository) AddAuthor(w http.ResponseWriter, r *http.Request) {
 	result := a.db.Create(&author)
 	if result.Error != nil {
 		fmt.Println(result.Error)
+		json.NewEncoder(w).Encode(http_errors.ParseErrors(result.Error))
+		return
 	}
 	// Send a 201 created response
 	w.WriteHeader(http.StatusCreated)
@@ -104,6 +110,8 @@ func (a *AuthorRepository) UpdateAuthor(w http.ResponseWriter, r *http.Request) 
 
 	if err != nil {
 		log.Fatalln(err)
+		json.NewEncoder(w).Encode(http_errors.ParseErrors(err))
+		return
 	}
 
 	var updatedAuthor models.Author
@@ -115,7 +123,8 @@ func (a *AuthorRepository) UpdateAuthor(w http.ResponseWriter, r *http.Request) 
 
 	// Append to the Book
 	if result := a.db.First(&author, id); result.Error != nil {
-		fmt.Println(result.Error)
+		json.NewEncoder(w).Encode(http_errors.ParseErrors(result.Error))
+		return
 	}
 
 	a.db.Save(&updatedAuthor)
@@ -131,7 +140,8 @@ func (a *AuthorRepository) FindAuthorByName(w http.ResponseWriter, r *http.Reque
 	var author []models.Author
 
 	if result := a.db.Where("name ILIKE ? ", "%"+vars["name"]+"%").Find(&author); result.Error != nil {
-		fmt.Println(result.Error)
+		json.NewEncoder(w).Encode(http_errors.ParseErrors(result.Error))
+		return
 	}
 
 	fmt.Println(vars["name"])
@@ -151,7 +161,8 @@ func (a *AuthorRepository) DeleteAuthor(w http.ResponseWriter, r *http.Request) 
 	var author models.Author
 
 	if result := a.db.First(&author, id); result.Error != nil {
-		fmt.Println(result.Error)
+		json.NewEncoder(w).Encode(http_errors.ParseErrors(result.Error))
+		return
 	}
 	// Delete that book
 	a.db.Delete(&author)
@@ -180,6 +191,8 @@ func (a *AuthorRepository) GetAuthorWithBooksById(w http.ResponseWriter, r *http
 
 	if result := a.db.Preload("Books").First(&Author, id); result.Error != nil {
 		fmt.Println(result.Error)
+		json.NewEncoder(w).Encode(http_errors.ParseErrors(result.Error))
+		return
 	}
 
 	w.Header().Add("Content-Type", "application/json")
@@ -193,6 +206,8 @@ func (a *AuthorRepository) GetAllAuthorsWithBooksById(w http.ResponseWriter, r *
 
 	if result := a.db.Preload("Books").Find(&Authors); result.Error != nil {
 		fmt.Println(result.Error)
+		json.NewEncoder(w).Encode(http_errors.ParseErrors(result.Error))
+		return
 	}
 
 	w.Header().Add("Content-Type", "application/json")
