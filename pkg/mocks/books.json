@@ -1,0 +1,85 @@
+[
+  {
+    "Id": 1,
+    "Title": "Screaming Man, A (Un homme qui crie)",
+    "Page": 610,
+    "Stock": 347,
+    "Price": "$18.80",
+    "StockCode": "0093-5269",
+    "ISBN": "105257099-2",
+    "AuthorID": 1
+  },
+  { "Id": 2, "Title": "Chinese Coffee", "Page": 243, "Stock": 887, "Price": "$34.46", "StockCode": "0268-0711", "ISBN": "196230402-7", "AuthorID": 2 },
+  { "Id": 3, "Title": "Decoder", "Page": 268, "Stock": 504, "Price": "$53.02", "StockCode": "13630-0023", "ISBN": "393952971-0", "AuthorID": 3 },
+  {
+    "Id": 4,
+    "Title": "The Hound of the Baskervilles",
+    "Page": 536,
+    "Stock": 355,
+    "Price": "$72.01",
+    "StockCode": "10819-7008",
+    "ISBN": "549398531-4",
+    "AuthorID": 4
+  },
+  { "Id": 5, "Title": "Desert Bloom", "Page": 731, "Stock": 954, "Price": "$69.69", "StockCode": "0406-9911", "ISBN": "288065216-2", "AuthorID": 5 },
+  {
+    "Id": 6,
+    "Title": "Cathedral, The (Katedra)",
+    "Page": 506,
+    "Stock": 717,
+    "Price": "$45.40",
+    "StockCode": "10812-869",
+    "ISBN": "264596420-6",
+    "AuthorID": 6
+  },
+  {
+    "Id": 7,
+    "Title": "Internet's Own Boy: The Story of Aaron Swartz, The",
+    "Page": 666,
+    "Stock": 131,
+    "Price": "$67.68",
+    "StockCode": "16590-276",
+    "ISBN": "252878344-2",
+    "AuthorID": 7
+  },
+  { "Id": 8, "Title": "Cool, Dry Place, A", "Page": 156, "Stock": 484, "Price": "$48.66", "StockCode": "16571-120", "ISBN": "430230819-2", "AuthorID": 8 },
+  { "Id": 9, "Title": "Bad Girls (Biches, Les)", "Page": 154, "Stock": 245, "Price": "$80.68", "StockCode": "0056-0174", "ISBN": "115075226-2", "AuthorID": 9 },
+  { "Id": 10, "Title": "Dead Heat", "Page": 711, "Stock": 261, "Price": "$76.69", "StockCode": "65044-2014", "ISBN": "498428475-7", "AuthorID": 10 },
+  {
+    "Id": 11,
+    "Title": "Alien Nation: Dark Horizon",
+    "Page": 589,
+    "Stock": 403,
+    "Price": "$50.47",
+    "StockCode": "28109-010",
+    "ISBN": "983532211-2",
+    "AuthorID": 11
+  },
+  { "Id": 12, "Title": "Closing the Ring", "Page": 739, "Stock": 733, "Price": "$44.80", "StockCode": "0280-8080", "ISBN": "476824555-2", "AuthorID": 12 },
+  { "Id": 13, "Title": "Ollin oppivuodet", "Page": 729, "Stock": 596, "Price": "$47.89", "StockCode": "0069-3150", "ISBN": "516780511-2", "AuthorID": 13 },
+  {
+    "Id": 14,
+    "Title": "Meshes of the Afternoon",
+    "Page": 765,
+    "Stock": 190,
+    "Price": "$13.19",
+    "StockCode": "63029-010",
+    "ISBN": "858641770-X",
+    "AuthorID": 14
+  },
+  { "Id": 15, "Title": "Evening", "Page": 682, "Stock": 332, "Price": "$70.43", "StockCode": "0168-0434", "ISBN": "686962940-4", "AuthorID": 15 },
+  { "Id": 16, "Title": "Age of Consent", "Page": 679, "Stock": 108, "Price": "$63.72", "StockCode": "43742-0498", "ISBN": "483226011-1", "AuthorID": 16 },
+  { "Id": 17, "Title": "The Inhabited Island", "Page": 204, "Stock": 664, "Price": "$33.40", "StockCode": "54569-1411", "ISBN": "264968355-4", "AuthorID": 17 },
+  { "Id": 18, "Title": "Stevie", "Page": 657, "Stock": 623, "Price": "$70.59", "StockCode": "49738-374", "ISBN": "245353544-7", "AuthorID": 18 },
+  { "Id": 19, "Title": "Dream Catcher, The", "Page": 545, "Stock": 157, "Price": "$16.58", "StockCode": "0409-7808", "ISBN": "566742063-5", "AuthorID": 19 },
+  {
+    "Id": 20,
+    "Title": "How to Train Your Dragon 2",
+    "Page": 461,
+    "Stock": 126,
+    "Price": "$52.78",
+    "StockCode": "59741-224",
+    "ISBN": "767822077-4",
+    "AuthorID": 21
+  }
+]
