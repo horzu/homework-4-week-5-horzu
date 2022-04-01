@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"strings"
 	"time"
 
 	"github.com/gorilla/handlers"
@@ -36,12 +37,10 @@ func main() {
 	// bookRepo.InsertSampleData()
 	// authorRepo.InsertSampleData()
 
-	// fmt.Println(authorRepo.GetAuthorWithBooksById(12))
-	// fmt.Println(bookRepo.GetBookWithAuthorsById(12))
-
-	// fmt.Println(authorRepo.GetAuthorWithBooks2())
-
 	r := mux.NewRouter()
+
+	r.Use(loggingMiddleware)
+	r.Use(authenticationMiddleware)
 
 	handlers.AllowedOrigins([]string{"https://localhost"})
 	handlers.AllowedHeaders([]string{"Content-Type", "Authorization"})
@@ -90,6 +89,30 @@ func main() {
 	}()
 
 	ShutdownServer(srv, time.Second*10)
+}
+
+func loggingMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// Do stuff here
+		log.Println(r.RequestURI)
+		// Call the next handler, which can be another middleware in the chain, or the final handler.
+		next.ServeHTTP(w, r)
+	})
+}
+
+func authenticationMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		token := r.Header.Get("Authorization")
+		if strings.HasPrefix(r.URL.Path, "/authors/") {
+			if token == "Bearer authortoken" {
+				next.ServeHTTP(w, r)
+			} else {
+				http.Error(w, "Token not found", http.StatusUnauthorized)
+			}
+		} else {
+			next.ServeHTTP(w, r)
+		}
+	})
 }
 
 func ShutdownServer(srv *http.Server, timeout time.Duration) {
