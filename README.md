@@ -22,7 +22,7 @@ go run cmd/main.go
 ---
 
 * Authors With Books
-![Authors With Books](./screenshots/authorswithbooks.jpg)
+![Authors With Books](https://github.com/horzu/homework-4-week-5-horzu/blob/main/screenshots/authorswithbooks.JPG?raw=true)
 
 ---
 
