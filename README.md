@@ -16,8 +16,8 @@ go run cmd/main.go
 
 ## Screenshots
 
-* Routers
-![Routers](./screenshots/paths.jpg)
+* Routes
+![Routes](https://github.com/horzu/homework-4-week-5-horzu/blob/main/screenshots/paths.JPG?raw=true)
 
 ---
 
@@ -27,27 +27,27 @@ go run cmd/main.go
 ---
 
 * Books With Authors
-![Books With Authors](./screenshots/bookwithauthors.jpg)
+![Books With Authors](https://github.com/horzu/homework-4-week-5-horzu/blob/main/screenshots/bookwithauthors.JPG?raw=true)
 
 ---
 
 * Find Authors By Name
-![Find Authors By Name](./screenshots/findauthors.jpg)
+![Find Authors By Name](https://github.com/horzu/homework-4-week-5-horzu/blob/main/screenshots/findauthors.JPG?raw=true)
 
 ---
 
 * Get Books Pages Less Then
-![Get Books Pages Less Then](./screenshots/getpageslessthen.jpg)
+![Get Books Pages Less Then](https://github.com/horzu/homework-4-week-5-horzu/blob/main/screenshots/getpageslessthen.JPG?raw=true)
 
 ---
 
 * Error Messages
-![Error Messages](./screenshots/errormsg.jpg)
+![Error Messages](https://github.com/horzu/homework-4-week-5-horzu/blob/main/screenshots/errormsg.JPG?raw=true)
 
 ---
 
 * Swagger docs for some endpoints.
-![Swagger](./screenshots/swagger.jpg)
+![Swagger](https://github.com/horzu/homework-4-week-5-horzu/blob/main/screenshots/swagger.JPG?raw=true)
 
 ---
 
